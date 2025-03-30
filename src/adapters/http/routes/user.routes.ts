@@ -1,12 +1,12 @@
 import { UserController } from './../controllers/User.controllers';
-import { TypeOrmUserRepositoryPort } from '../../secondaryAdapter';
-import { UserService } from './../../../core/services/userService';
+import { TypeOrmUserRepository } from '../../secondaryAdapter';
+import { UserService } from '../../../core/services/UserService';
 import { Router } from "express";
 import { Middleware } from '../middleware/middleware';
 
 
 const router = Router();
-const userRepository = new TypeOrmUserRepositoryPort();
+const userRepository = new TypeOrmUserRepository();
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 

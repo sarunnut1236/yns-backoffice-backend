@@ -8,23 +8,31 @@ export class UserService {
         return await this.userRepository.findAll();
     }
 
-    async createUser(user: User): Promise<User> {
+    async createUser(user: Omit<User, 'id'>): Promise<User> {
         return await this.userRepository.createUser(user);
     }
 
-    async updateUser(id: string, user: User): Promise<User> {
-        return await this.userRepository.updateUser(id, user);
+    async updateUser(id: string, userData: Partial<User>): Promise<User | undefined> {
+        return await this.userRepository.updateUser(id, userData);
     }
 
     async deleteUser(id: string): Promise<boolean> {
         return await this.userRepository.deleteUser(id);
     }
 
-    async getUser(id: string): Promise<User | null> {
+    async getUser(id: string): Promise<User | undefined> {
         return await this.userRepository.findById(id);
     }
 
-    async getUserByEmail(email: string): Promise<User | null> {
-        return await this.userRepository.findByEmail(email);
+    async getUserByLiffUserId(liffUserId: string): Promise<User | undefined> {
+        return await this.userRepository.findByLiffUserId(liffUserId);
+    }
+
+    async getUsersByIds(ids: string[]): Promise<User[]> {
+        return await this.userRepository.bulkFindByIds(ids);
+    }
+
+    async createDefaultUser(liffUserId: string): Promise<User> {
+        return await this.userRepository.createDefaultUser(liffUserId);
     }
 }

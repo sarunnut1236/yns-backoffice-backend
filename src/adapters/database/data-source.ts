@@ -1,6 +1,5 @@
 import { configDotenv } from "dotenv";
 import { DataSource } from "typeorm";
-import { Cars, User } from "../../core/entity";
 
 configDotenv();
 
@@ -12,7 +11,7 @@ export const AppDataSource = new DataSource({
     url: DATABASE_URL,
     synchronize: NODE_ENV === "development" ? true : false,
     logging: NODE_ENV === "development" ? true : false,
-    entities: [User, Cars],
+    entities: ["./src/core/entity/index.ts"],
     ssl: true,
     extra: {
         ssl: {
