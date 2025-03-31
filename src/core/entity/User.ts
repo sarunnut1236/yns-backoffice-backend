@@ -22,7 +22,7 @@ export class User {
     firstname?: string;
 
     @Column({ nullable: true })
-    surname?: string;
+    lastname?: string;
 
     @Column({ nullable: true })
     nickname?: string;

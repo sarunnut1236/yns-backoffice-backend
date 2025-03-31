@@ -33,7 +33,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
         const newUser = this.userRepository.create({
             ...user,
             id: uuidv4(),
-            role: UserRole.GUEST,
+            role: UserRole.JOINER,
             createdAt: new Date(),
             updatedAt: new Date()
         });
