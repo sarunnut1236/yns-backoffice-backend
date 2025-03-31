@@ -29,21 +29,10 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
         return await this.userRepository.findBy({ id: In(ids) });
     }
 
-    async createUser(user: Omit<User, 'id'>): Promise<User> {
+    async createUser(user: Partial<User>): Promise<User> {
         const newUser = this.userRepository.create({
             ...user,
             id: uuidv4(),
-            role: UserRole.GUEST,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
-        return await this.userRepository.save(newUser);
-    }
-
-    async createDefaultUser(liffUserId: string): Promise<User> {
-        const newUser = this.userRepository.create({
-            id: uuidv4(),
-            liffUserId,
             role: UserRole.GUEST,
             createdAt: new Date(),
             updatedAt: new Date()

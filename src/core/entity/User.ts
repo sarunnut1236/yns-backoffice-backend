@@ -66,8 +66,8 @@ export class User {
     @Column({ nullable: true })
     memberCode?: string;
 
-    @Column({ nullable: true })
-    liffUserId?: string;
+    @Column()
+    liffUserId!: string;
 
     @CreateDateColumn()
     createdAt!: Date;

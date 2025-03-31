@@ -9,9 +9,7 @@ export interface UserRepositoryPort {
 
     bulkFindByIds(ids: string[]): Promise<User[]>;
 
-    createUser(user: Omit<User, 'id'>): Promise<User>;
-
-    createDefaultUser(liffUserId: string): Promise<User>;
+    createUser(user: Partial<User>): Promise<User>;
 
     deleteUser(id: string): Promise<boolean>;
 

@@ -8,7 +8,7 @@ export class UserService {
         return await this.userRepository.findAll();
     }
 
-    async createUser(user: Omit<User, 'id'>): Promise<User> {
+    async createUser(user: Partial<User>): Promise<User> {
         return await this.userRepository.createUser(user);
     }
 
@@ -30,9 +30,5 @@ export class UserService {
 
     async getUsersByIds(ids: string[]): Promise<User[]> {
         return await this.userRepository.bulkFindByIds(ids);
-    }
-
-    async createDefaultUser(liffUserId: string): Promise<User> {
-        return await this.userRepository.createDefaultUser(liffUserId);
     }
 }
