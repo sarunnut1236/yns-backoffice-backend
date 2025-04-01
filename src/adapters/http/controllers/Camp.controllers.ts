@@ -7,7 +7,7 @@ export class CampController {
 
     async getAllCamps(request: Request, response: Response): Promise<Response> {
         try {
-            const queryParams = request.params as Partial<Camp>;
+            const queryParams = request.query as Partial<Camp>;
             
             const camps = await this.campService.getCamps(queryParams);
 
@@ -80,7 +80,7 @@ export class CampController {
                 return response.status(404).json({ message: "Camp not found" });
             }
 
-            return response.status(204).json();
+            return response.status(200).json({message: "Camp deleted successfully"});
         } catch (error) {
             console.error(`CampController.deleteCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
             return response.status(500).json({ message: "Internal server error" });
