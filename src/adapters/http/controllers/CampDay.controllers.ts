@@ -7,7 +7,7 @@ export class CampDayController {
 
     async getAllCampDays(request: Request, response: Response): Promise<Response> {
         try {
-            const campDays = await this.campDayService.getCampDays();
+            const campDays = await this.campDayService.getCampDays(request.query as Partial<CampDay>);
 
             if (!campDays || campDays.length === 0) {
                 return response.status(204).json({ message: "No camp days found" });
@@ -94,7 +94,7 @@ export class CampDayController {
                 return response.status(404).json({ message: "Camp day not found" });
             }
 
-            return response.status(204).json();
+            return response.status(200).json({ message: "Camp day deleted successfully" });
         } catch (error) {
             console.error(`CampDayController.deleteCampDay: ${error instanceof Error ? error.message : 'Unknown error'}`);
             return response.status(500).json({ message: "Internal server error" });

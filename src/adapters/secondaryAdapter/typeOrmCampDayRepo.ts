@@ -6,8 +6,18 @@ import { v4 as uuidv4 } from 'uuid';
 export class TypeOrmCampDayRepository implements CampDayRepositoryPort {
     private campDayRepository = AppDataSource.getRepository(CampDay);
 
-    async findAll(): Promise<CampDay[]> {
-        return await this.campDayRepository.find();
+    async findAll(queryParams: Partial<CampDay>): Promise<CampDay[]> {
+        const whereClause = Object.entries(queryParams).reduce(
+            (acc, [key, value]) => {
+                if (value !== undefined) {
+                    acc[key] = value;
+                }
+                return acc;
+            },
+            {} as Record<string, any>
+        );
+
+        return await this.campDayRepository.findBy(whereClause);
     }
 
     async findById(id: string): Promise<CampDay | undefined> {

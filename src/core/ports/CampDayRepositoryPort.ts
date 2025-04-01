@@ -1,7 +1,7 @@
 import { CampDay } from "../entity";
 
 export interface CampDayRepositoryPort {
-    findAll(): Promise<CampDay[]>;
+    findAll(queryParams: Partial<CampDay>): Promise<CampDay[]>;
 
     findById(id: string): Promise<CampDay|undefined>;
     

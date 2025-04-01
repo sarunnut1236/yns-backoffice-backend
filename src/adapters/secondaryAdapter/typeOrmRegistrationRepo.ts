@@ -6,9 +6,20 @@ import { v4 as uuidv4 } from 'uuid';
 export class TypeOrmRegistrationRepository implements RegistrationRepositoryPort {
     private registrationRepository = AppDataSource.getRepository(Registration);
 
-    async findAll(): Promise<Registration[]> {
+    async findAll(queryParams: Partial<Registration>): Promise<Registration[]> {
+        const whereClause = Object.entries(queryParams).reduce(
+            (acc, [key, value]) => {
+                if (value !== undefined) {
+                    acc[key] = value;
+                }
+                return acc;
+            },
+            {} as Record<string, any>
+        );
+        
         return await this.registrationRepository.find({
-            relations: ["user", "camp"]
+            relations: ["user", "camp"],
+            where: whereClause
         });
     }
 
@@ -20,32 +31,7 @@ export class TypeOrmRegistrationRepository implements RegistrationRepositoryPort
         return registration || undefined;
     }
 
-    async findByUserId(userId: string): Promise<Registration[]> {
-        return await this.registrationRepository.find({
-            where: { user: { id: userId } },
-            relations: ["user", "camp"]
-        });
-    }
-
-    async findByCampId(campId: string): Promise<Registration[]> {
-        return await this.registrationRepository.find({
-            where: { camp: { id: campId } },
-            relations: ["user", "camp"]
-        });
-    }
-
-    async findByCampAndUser(campId: string, userId: string): Promise<Registration | undefined> {
-        const registration = await this.registrationRepository.findOne({
-            where: { 
-                camp: { id: campId },
-                user: { id: userId }
-            },
-            relations: ["user", "camp"]
-        });
-        return registration || undefined;
-    }
-
-    async createRegistration(userId: string, campId: string, dayAvailability: { [dayId: string]: boolean }): Promise<Registration | undefined> {
+    async createRegistration(userId: string, campId: string, dayAvailability: { [dayId: string]: boolean }, registrationDate: Date): Promise<Registration | undefined> {
         try {
             const userRepository = AppDataSource.getRepository('User');
             const campRepository = AppDataSource.getRepository('Camp');
@@ -62,6 +48,7 @@ export class TypeOrmRegistrationRepository implements RegistrationRepositoryPort
                 user,
                 camp,
                 dayAvailability,
+                registrationDate,
                 createdAt: new Date(),
                 updatedAt: new Date()
             });

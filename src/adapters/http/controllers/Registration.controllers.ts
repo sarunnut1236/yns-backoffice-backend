@@ -7,7 +7,7 @@ export class RegistrationController {
 
     async getAllRegistrations(request: Request, response: Response): Promise<Response> {
         try {
-            const registrations = await this.registrationService.getRegistrations();
+            const registrations = await this.registrationService.getRegistrations(request.query as Partial<Registration>);
 
             if (!registrations || registrations.length === 0) {
                 return response.status(204).json({ message: "No registrations found" });
@@ -36,63 +36,15 @@ export class RegistrationController {
         }
     }
 
-    async getRegistrationsByUserId(request: Request, response: Response): Promise<Response> {
-        try {
-            const { userId } = request.params;
-            const registrations = await this.registrationService.getRegistrationsByUserId(userId);
-
-            if (!registrations || registrations.length === 0) {
-                return response.status(204).json({ message: "No registrations found for this user" });
-            }
-
-            return response.status(200).json(registrations);
-        } catch (error) {
-            console.error(`RegistrationController.getRegistrationsByUserId: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
-        }
-    }
-
-    async getRegistrationsByCampId(request: Request, response: Response): Promise<Response> {
-        try {
-            const { campId } = request.params;
-            const registrations = await this.registrationService.getRegistrationsByCampId(campId);
-
-            if (!registrations || registrations.length === 0) {
-                return response.status(204).json({ message: "No registrations found for this camp" });
-            }
-
-            return response.status(200).json(registrations);
-        } catch (error) {
-            console.error(`RegistrationController.getRegistrationsByCampId: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
-        }
-    }
-
-    async getRegistrationByCampAndUser(request: Request, response: Response): Promise<Response> {
-        try {
-            const { campId, userId } = request.params;
-            const registration = await this.registrationService.getRegistrationByCampAndUser(campId, userId);
-
-            if (!registration) {
-                return response.status(404).json({ message: "Registration not found" });
-            }
-
-            return response.status(200).json(registration);
-        } catch (error) {
-            console.error(`RegistrationController.getRegistrationByCampAndUser: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
-        }
-    }
-
     async createRegistration(request: Request, response: Response): Promise<Response> {
         try {
-            const { userId, campId, dayAvailability } = request.body;
+            const { userId, campId, dayAvailability, registrationDate } = request.body;
             
             if (!userId || !campId || !dayAvailability) {
                 return response.status(400).json({ message: "Missing required fields" });
             }
 
-            const newRegistration = await this.registrationService.createRegistration(userId, campId, dayAvailability);
+            const newRegistration = await this.registrationService.createRegistration(userId, campId, dayAvailability, registrationDate);
 
             if (!newRegistration) {
                 return response.status(400).json({ message: "Failed to create registration" });

@@ -9,7 +9,7 @@ const campRepository = new TypeOrmCampRepository();
 const campService = new CampService(campRepository);
 const campController = new CampController(campService);
 
-router.get("/camps", Middleware.verifyToken, campController.getAllCamps.bind(campController));
+router.get("/camps", campController.getAllCamps.bind(campController));
 router.get("/camp/:id", Middleware.verifyToken, campController.getCamp.bind(campController));
 router.post("/camp/create", Middleware.verifyToken, campController.createCamp.bind(campController));
 router.put("/camp/:id", Middleware.verifyToken, campController.updateCamp.bind(campController));
