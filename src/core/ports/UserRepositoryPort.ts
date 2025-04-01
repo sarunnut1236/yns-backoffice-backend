@@ -14,4 +14,6 @@ export interface UserRepositoryPort {
     deleteUser(id: string): Promise<boolean>;
 
     updateUser(id: string, userData: Partial<User>): Promise<User|undefined>;
+
+    loginUser(liffUserId: string): Promise<User|undefined>;
 }

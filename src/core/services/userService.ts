@@ -31,4 +31,8 @@ export class UserService {
     async getUsersByIds(ids: string[]): Promise<User[]> {
         return await this.userRepository.bulkFindByIds(ids);
     }
+
+    async loginUser(liffUserId: string): Promise<User | undefined> {
+        return await this.userRepository.loginUser(liffUserId);
+    }
 }

@@ -37,7 +37,7 @@ export class Camp {
     @OneToMany(() => CampDay, (campDay) => campDay.camp, {
         cascade: true,
     })
-    days!: CampDay[];
+    days?: CampDay[];
 
     @CreateDateColumn()
     createdAt!: Date;

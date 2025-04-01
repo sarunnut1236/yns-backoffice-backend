@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 export enum UserRole {
     ADMIN = '2',
@@ -18,11 +18,14 @@ export class User {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
+    @Column({ unique: true })
+    liffUserId!: string;
+
     @Column({ nullable: true })
     firstname?: string;
 
     @Column({ nullable: true })
-    lastname?: string;
+    surname?: string;
 
     @Column({ nullable: true })
     nickname?: string;
@@ -65,9 +68,6 @@ export class User {
 
     @Column({ nullable: true })
     memberCode?: string;
-
-    @Column()
-    liffUserId!: string;
 
     @CreateDateColumn()
     createdAt!: Date;

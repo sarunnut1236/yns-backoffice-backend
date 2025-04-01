@@ -62,4 +62,11 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
         const result = await this.userRepository.delete(id);
         return result.affected ? result.affected > 0 : false;
     }
+
+    async loginUser(liffUserId: string): Promise<User | undefined> {
+        const user = await this.userRepository.findOne({
+            where: { liffUserId }
+        });
+        return user || undefined;
+    }
 }

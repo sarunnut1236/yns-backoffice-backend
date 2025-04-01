@@ -1,7 +1,7 @@
 import { Camp } from "../entity";
 
 export interface CampRepositoryPort {
-    findAll(): Promise<Camp[]>;
+    findAll(queryParams?: Partial<Camp>): Promise<Camp[]>;
 
     findById(id: string): Promise<Camp|undefined>;
 

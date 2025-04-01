@@ -6,57 +6,84 @@ export class CampController {
     constructor(private campService: CampService) {}
 
     async getAllCamps(request: Request, response: Response): Promise<Response> {
-        const camps = await this.campService.getCamps();
+        try {
+            const queryParams = request.params as Partial<Camp>;
+            
+            const camps = await this.campService.getCamps(queryParams);
 
-        if (!camps || camps.length === 0) {
-            return response.status(204).json({ message: "No camps found" });
+            if (!camps || camps.length === 0) {
+                return response.status(204).json({ message: "No camps found" });
+            }
+
+            return response.status(200).json(camps);
+        } catch (error) {
+            console.error(`CampController.getAllCamps: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
         }
-
-        return response.status(200).json(camps);
     }
 
     async getCamp(request: Request, response: Response): Promise<Response> {
-        const { id } = request.params;
-        const camp = await this.campService.getCamp(id);
+        try {
+            const { id } = request.params;
+            const camp = await this.campService.getCamp(id);
 
-        if (!camp) {
-            return response.status(404).json({ message: "Camp not found" });
+            if (!camp) {
+                return response.status(404).json({ message: "Camp not found" });
+            }
+
+            return response.status(200).json(camp);
+        } catch (error) {
+            console.error(`CampController.getCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
         }
-
-        return response.status(200).json(camp);
     }
 
     async createCamp(request: Request, response: Response): Promise<Response> {
-        const campData = request.body;
-        const newCamp = await this.campService.createCamp(campData);
+        try {
+            const campData = request.body;
+            const newCamp = await this.campService.createCamp(campData);
 
-        if (!newCamp) {
-            return response.status(400).json({ message: "Failed to create camp" });
+            if (!newCamp) {
+                return response.status(400).json({ message: "Failed to create camp" });
+            }
+
+            return response.status(201).json(newCamp);
+        } catch (error) {
+            console.error(`CampController.createCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
         }
-
-        return response.status(201).json(newCamp);
     }
 
     async updateCamp(request: Request, response: Response): Promise<Response> {
-        const { id } = request.params;
-        const campData = request.body as Partial<Camp>;
-        const updatedCamp = await this.campService.updateCamp(id, campData);
+        try {
+            const { id } = request.params;
+            const campData = request.body as Partial<Camp>;
+            const updatedCamp = await this.campService.updateCamp(id, campData);
 
-        if (!updatedCamp) {
-            return response.status(404).json({ message: "Camp not found" });
+            if (!updatedCamp) {
+                return response.status(404).json({ message: "Camp not found" });
+            }
+
+            return response.status(200).json(updatedCamp);
+        } catch (error) {
+            console.error(`CampController.updateCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
         }
-
-        return response.status(200).json(updatedCamp);
     }
 
     async deleteCamp(request: Request, response: Response): Promise<Response> {
-        const { id } = request.params;
-        const deleted = await this.campService.deleteCamp(id);
+        try {
+            const { id } = request.params;
+            const deleted = await this.campService.deleteCamp(id);
 
-        if (!deleted) {
-            return response.status(404).json({ message: "Camp not found" });
+            if (!deleted) {
+                return response.status(404).json({ message: "Camp not found" });
+            }
+
+            return response.status(204).json();
+        } catch (error) {
+            console.error(`CampController.deleteCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
         }
-
-        return response.status(204).json();
     }
 }

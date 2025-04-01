@@ -4,8 +4,8 @@ import { CampRepositoryPort } from "../ports";
 export class CampService {
     constructor(private readonly campRepository: CampRepositoryPort) {}
 
-    async getCamps(): Promise<Camp[]> {
-        return await this.campRepository.findAll();
+    async getCamps(queryParams: Partial<Camp>): Promise<Camp[]> {
+        return await this.campRepository.findAll(queryParams);
     }
 
     async getCamp(id: string): Promise<Camp | undefined> {

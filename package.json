@@ -20,8 +20,10 @@
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.9",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
+    "ts-node": "^10.9.2",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
@@ -31,11 +33,11 @@
   },
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon build/index.js",
-    "start:dev": "concurrently \"tsc -w\" \"nodemon build/index.js\"",
+    "dev": "nodemon src/index.ts",
+    "start:dev": "concurrently \"tsc -w\" \"nodemon src/index.ts\"",
     "build": "tsc",
-    "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration": "npm run typeorm migration:run -- -d ./src/data-source.ts"
+    "migration": "npm run typeorm migration:run -- -d ./src/adapters/database/data-source.ts",
+    "start": "concurrently \"npm run migration\" \"ts-node src/index.ts\""
   }
 }
