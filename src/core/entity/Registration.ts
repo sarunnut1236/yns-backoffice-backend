@@ -29,9 +29,6 @@ export class Registration {
     @Column("simple-json")
     dayAvailability!: { [dayId: string]: boolean };
 
-    @Column()
-    registrationDate!: Date;
-
     @CreateDateColumn()
     createdAt!: Date;
 

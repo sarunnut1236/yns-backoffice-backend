@@ -37,14 +37,12 @@ export class RegistrationController {
     }
 
     async createRegistration(request: Request, response: Response): Promise<Response> {
-        try {
-            const { userId, campId, dayAvailability, registrationDate } = request.body;
-            
-            if (!userId || !campId || !dayAvailability) {
+        try {    
+            if (!request.body.userId || !request.body.campId || !request.body.dayAvailability) {
                 return response.status(400).json({ message: "Missing required fields" });
             }
 
-            const newRegistration = await this.registrationService.createRegistration(userId, campId, dayAvailability, registrationDate);
+            const newRegistration = await this.registrationService.createRegistration(request.body as Omit<Registration, 'id'>);
 
             if (!newRegistration) {
                 return response.status(400).json({ message: "Failed to create registration" });
@@ -70,6 +68,22 @@ export class RegistrationController {
             return response.status(200).json(updatedRegistration);
         } catch (error) {
             console.error(`RegistrationController.updateRegistration: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            return response.status(500).json({ message: "Internal server error" });
+        }
+    }
+
+    async deleteRegistration(request: Request, response: Response): Promise<Response> {
+        try {
+            const { id } = request.params;
+            const isDeleted = await this.registrationService.deleteRegistration(id);
+
+            if (!isDeleted) {
+                return response.status(404).json({ message: "Registration not found or could not be deleted" });
+            }
+
+            return response.status(200).json({ message: "Registration successfully deleted" });
+        } catch (error) {
+            console.error(`RegistrationController.deleteRegistration: ${error instanceof Error ? error.message : 'Unknown error'}`);
             return response.status(500).json({ message: "Internal server error" });
         }
     }

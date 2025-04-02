@@ -8,7 +8,7 @@ export class CampController {
     async getAllCamps(request: Request, response: Response): Promise<Response> {
         try {
             const queryParams = request.query as Partial<Camp>;
-            
+
             const camps = await this.campService.getCamps(queryParams);
 
             if (!camps || camps.length === 0) {
@@ -17,8 +17,14 @@ export class CampController {
 
             return response.status(200).json(camps);
         } catch (error) {
-            console.error(`CampController.getAllCamps: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
+            console.error(
+                `CampController.getAllCamps: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+            return response
+                .status(500)
+                .json({ message: "Internal server error" });
         }
     }
 
@@ -33,8 +39,14 @@ export class CampController {
 
             return response.status(200).json(camp);
         } catch (error) {
-            console.error(`CampController.getCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
+            console.error(
+                `CampController.getCamp: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+            return response
+                .status(500)
+                .json({ message: "Internal server error" });
         }
     }
 
@@ -44,13 +56,21 @@ export class CampController {
             const newCamp = await this.campService.createCamp(campData);
 
             if (!newCamp) {
-                return response.status(400).json({ message: "Failed to create camp" });
+                return response
+                    .status(400)
+                    .json({ message: "Failed to create camp" });
             }
 
             return response.status(201).json(newCamp);
         } catch (error) {
-            console.error(`CampController.createCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
+            console.error(
+                `CampController.createCamp: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+            return response
+                .status(500)
+                .json({ message: "Internal server error" });
         }
     }
 
@@ -66,8 +86,14 @@ export class CampController {
 
             return response.status(200).json(updatedCamp);
         } catch (error) {
-            console.error(`CampController.updateCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
+            console.error(
+                `CampController.updateCamp: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+            return response
+                .status(500)
+                .json({ message: "Internal server error" });
         }
     }
 
@@ -80,10 +106,18 @@ export class CampController {
                 return response.status(404).json({ message: "Camp not found" });
             }
 
-            return response.status(200).json({message: "Camp deleted successfully"});
+            return response
+                .status(200)
+                .json({ message: "Camp deleted successfully" });
         } catch (error) {
-            console.error(`CampController.deleteCamp: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            return response.status(500).json({ message: "Internal server error" });
+            console.error(
+                `CampController.deleteCamp: ${
+                    error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
+            return response
+                .status(500)
+                .json({ message: "Internal server error" });
         }
     }
 }

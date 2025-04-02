@@ -10,8 +10,9 @@ const registrationService = new RegistrationService(registrationRepository);
 const registrationController = new RegistrationController(registrationService);
 
 router.get("/registrations", registrationController.getAllRegistrations.bind(registrationController));
-router.get("/registration/:id", Middleware.verifyToken, registrationController.getRegistration.bind(registrationController));
+router.get("/registration/:id", registrationController.getRegistration.bind(registrationController));
 router.post("/registration/create", Middleware.verifyToken, registrationController.createRegistration.bind(registrationController));
 router.put("/registration/:id", Middleware.verifyToken, registrationController.updateRegistration.bind(registrationController));
+router.delete("/registration/:id", Middleware.verifyToken, registrationController.deleteRegistration.bind(registrationController));
 
 export { router as registrationRoutes };

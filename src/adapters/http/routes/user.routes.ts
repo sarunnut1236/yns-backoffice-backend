@@ -13,7 +13,7 @@ router.get("/user/line/:liffUserId", Middleware.verifyToken, userController.getU
 router.get("/user/:id", Middleware.verifyToken, userController.getUser.bind(userController));
 router.post("/user/bulk", Middleware.verifyToken, userController.getUsersByIds.bind(userController));
 router.post("/user/create", userController.createUser.bind(userController));
-router.post("/user/login", Middleware.verifyToken, userController.loginUser.bind(userController));
+router.post("/user/login", userController.loginUser.bind(userController));
 router.put("/user/:id", Middleware.verifyToken, userController.updateUser.bind(userController));
 router.delete("/user/:id", Middleware.verifyToken, userController.deleteUser.bind(userController));
 

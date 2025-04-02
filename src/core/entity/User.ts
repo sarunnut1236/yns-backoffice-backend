@@ -1,16 +1,22 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from "typeorm";
 
 export enum UserRole {
-    ADMIN = '2',
-    JOINER = '1',
-    GUEST = '0'
+    ADMIN = "2",
+    JOINER = "1",
+    GUEST = "0",
 }
 
 export enum Region {
-    BKK = 'BKK',
-    EAST = 'EAST',
-    CEN = 'CEN',
-    PARI = 'PARI'
+    BKK = "BKK",
+    EAST = "EAST",
+    CEN = "CEN",
+    PARI = "PARI",
 }
 
 @Entity()
@@ -25,7 +31,7 @@ export class User {
     firstname?: string;
 
     @Column({ nullable: true })
-    surname?: string;
+    lastname?: string;
 
     @Column({ nullable: true })
     nickname?: string;
@@ -41,9 +47,6 @@ export class User {
 
     @Column({ type: "enum", enum: Region, nullable: true })
     region?: Region;
-
-    @Column({ nullable: true })
-    joinedAt?: Date;
 
     @Column({ nullable: true })
     profileImage?: string;
@@ -75,4 +78,3 @@ export class User {
     @UpdateDateColumn()
     updatedAt!: Date;
 }
-

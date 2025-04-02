@@ -2,17 +2,20 @@ import { User } from "../entity";
 import { UserRepositoryPort } from "../ports";
 
 export class UserService {
-    constructor(private readonly userRepository: UserRepositoryPort) {}
+    constructor(private readonly userRepository: UserRepositoryPort) { }
 
-    async getUsers(): Promise<User[]> {
-        return await this.userRepository.findAll();
+    async getUsers(queryParams: Partial<User>): Promise<User[]> {
+        return await this.userRepository.findAll(queryParams);
     }
 
     async createUser(user: Partial<User>): Promise<User> {
         return await this.userRepository.createUser(user);
     }
 
-    async updateUser(id: string, userData: Partial<User>): Promise<User | undefined> {
+    async updateUser(
+        id: string,
+        userData: Omit<Partial<User>, 'id'>
+    ): Promise<User | undefined> {
         return await this.userRepository.updateUser(id, userData);
     }
 
@@ -21,18 +24,14 @@ export class UserService {
     }
 
     async getUser(id: string): Promise<User | undefined> {
-        return await this.userRepository.findById(id);
+        return await this.userRepository.findOne({ id });
     }
 
     async getUserByLiffUserId(liffUserId: string): Promise<User | undefined> {
-        return await this.userRepository.findByLiffUserId(liffUserId);
+        return await this.userRepository.findOne({ liffUserId });
     }
 
     async getUsersByIds(ids: string[]): Promise<User[]> {
         return await this.userRepository.bulkFindByIds(ids);
-    }
-
-    async loginUser(liffUserId: string): Promise<User | undefined> {
-        return await this.userRepository.loginUser(liffUserId);
     }
 }

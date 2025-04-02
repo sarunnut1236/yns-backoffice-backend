@@ -2,27 +2,18 @@ import { Camp } from "../../core/entity";
 import { CampRepositoryPort } from "../../core/ports";
 import { AppDataSource } from "../database/data-source";
 import { v4 as uuidv4 } from "uuid";
+import { turnToWhereClause } from "./utils";
 
 export class TypeOrmCampRepository implements CampRepositoryPort {
     private campRepository = AppDataSource.getRepository(Camp);
 
     async findAll(queryParams: Partial<Camp>): Promise<Camp[]> {
-        const whereClause = Object.entries(queryParams).reduce(
-            (acc, [key, value]) => {
-                if (value !== undefined) {
-                    acc[key] = value;
-                }
-                return acc;
-            },
-            {} as Record<string, any>
-        );
-
-        return await this.campRepository.findBy(whereClause);
+        return await this.campRepository.findBy(turnToWhereClause(queryParams));
     }
 
-    async findById(id: string): Promise<Camp | undefined> {
+    async findOne(queryParams: Partial<Camp>): Promise<Camp | undefined> {
         const camp = await this.campRepository.findOne({
-            where: { id },
+            where: turnToWhereClause(queryParams),
         });
         return camp || undefined;
     }
@@ -39,7 +30,7 @@ export class TypeOrmCampRepository implements CampRepositoryPort {
 
     async updateCamp(
         id: string,
-        campData: Partial<Camp>
+        campData: Omit<Partial<Camp>, "id">
     ): Promise<Camp | undefined> {
         const campToUpdate = await this.campRepository.findOne({
             where: { id },

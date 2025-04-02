@@ -4,11 +4,13 @@ import { Encrypt } from "../../helpers/encrypt";
 import { User } from "../../../core/entity";
 
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) { }
 
     async getAllUsers(request: Request, response: Response): Promise<Response> {
         try {
-            const users = await this.userService.getUsers();
+            const queryParams = request.query as Partial<User>;
+
+            const users = await this.userService.getUsers(queryParams);
 
             if (!users || users.length === 0) {
                 return response.status(404).json({ message: "No users found" });
@@ -56,11 +58,11 @@ export class UserController {
     async getUsersByIds(request: Request, response: Response): Promise<Response> {
         try {
             const { ids } = request.body;
-            
+
             if (!ids || !Array.isArray(ids)) {
                 return response.status(400).json({ message: "Invalid user IDs provided" });
             }
-            
+
             const users = await this.userService.getUsersByIds(ids);
 
             if (!users || users.length === 0) {
@@ -77,7 +79,7 @@ export class UserController {
     async createUser(request: Request, response: Response): Promise<Response> {
         try {
             const userData = request.body as Partial<User>;
-            
+
             if (!userData?.liffUserId) {
                 return response.status(400).json({ message: "LiffUserId is required" });
             }
@@ -137,12 +139,12 @@ export class UserController {
     async loginUser(request: Request, response: Response): Promise<Response> {
         try {
             const { liffUserId } = request.body as Partial<User>;
-            
+
             if (!liffUserId) {
                 return response.status(400).json({ message: "LiffUserId is required" });
             }
 
-            const user = await this.userService.loginUser(liffUserId);
+            const user = await this.userService.getUserByLiffUserId(liffUserId);
 
             if (!user) {
                 return response.status(403).json({ message: "Unauthorized" });

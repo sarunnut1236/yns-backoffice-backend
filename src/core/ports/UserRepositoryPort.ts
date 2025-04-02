@@ -1,11 +1,9 @@
 import { User } from "../entity";
 
 export interface UserRepositoryPort {
-    findAll(): Promise<User[]>;
+    findAll(queryParams?: Partial<User>): Promise<User[]>;
 
-    findByLiffUserId(liffUserId: string): Promise<User|undefined>;
-
-    findById(id: string): Promise<User|undefined>;
+    findOne(queryParams: Partial<User>): Promise<User|undefined>;
 
     bulkFindByIds(ids: string[]): Promise<User[]>;
 
@@ -13,7 +11,5 @@ export interface UserRepositoryPort {
 
     deleteUser(id: string): Promise<boolean>;
 
-    updateUser(id: string, userData: Partial<User>): Promise<User|undefined>;
-
-    loginUser(liffUserId: string): Promise<User|undefined>;
+    updateUser(id: string, userData: Omit<Partial<User>, 'id'>): Promise<User|undefined>;
 }

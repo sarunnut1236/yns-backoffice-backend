@@ -3,9 +3,11 @@ import { Registration } from "../entity";
 export interface RegistrationRepositoryPort {
     findAll(queryParams: Partial<Registration>): Promise<Registration[]>;
 
-    findById(id: string): Promise<Registration|undefined>;
+    findOne(queryParams: Partial<Registration>): Promise<Registration|undefined>;
 
-    createRegistration(userId: string, campId: string, dayAvailability: { [dayId: string]: boolean }, registrationDate: Date): Promise<Registration|undefined>;
+    createRegistration(registrationData: Omit<Registration, 'id'>): Promise<Registration|undefined>;
 
-    updateRegistration(id: string, registrationData: Partial<Registration>): Promise<Registration|undefined>;
+    updateRegistration(id: string, registrationData: Omit<Partial<Registration>, 'id'>): Promise<Registration|undefined>;
+    
+    deleteRegistration(id: string): Promise<boolean>;
 }

@@ -2,31 +2,22 @@ import { CampDay } from "../../core/entity";
 import { CampDayRepositoryPort } from "../../core/ports";
 import { AppDataSource } from "../database/data-source";
 import { v4 as uuidv4 } from 'uuid';
+import { turnToWhereClause } from "./utils";
 
 export class TypeOrmCampDayRepository implements CampDayRepositoryPort {
     private campDayRepository = AppDataSource.getRepository(CampDay);
 
     async findAll(queryParams: Partial<CampDay>): Promise<CampDay[]> {
-        const whereClause = Object.entries(queryParams).reduce(
-            (acc, [key, value]) => {
-                if (value !== undefined) {
-                    acc[key] = value;
-                }
-                return acc;
-            },
-            {} as Record<string, any>
-        );
-
-        return await this.campDayRepository.findBy(whereClause);
+        return await this.campDayRepository.findBy(turnToWhereClause(queryParams));
     }
 
-    async findById(id: string): Promise<CampDay | undefined> {
+    async findOne(queryParams: Partial<CampDay>): Promise<CampDay | undefined> {
         const campDay = await this.campDayRepository.findOne({
-            where: { id }
+            where: turnToWhereClause(queryParams),
         });
         return campDay || undefined;
     }
-    
+
     async findByCampId(campId: string): Promise<CampDay[]> {
         return await this.campDayRepository.find({
             where: { camp: { id: campId } },
@@ -42,7 +33,7 @@ export class TypeOrmCampDayRepository implements CampDayRepositoryPort {
         return await this.campDayRepository.save(newCampDay);
     }
 
-    async updateCampDay(id: string, campDayData: Partial<CampDay>): Promise<CampDay | undefined> {
+    async updateCampDay(id: string, campDayData: Omit<Partial<CampDay>, 'id'>): Promise<CampDay | undefined> {
         const campDayToUpdate = await this.campDayRepository.findOne({
             where: { id }
         });

@@ -3,24 +3,18 @@ import { UserRepositoryPort } from "../../core/ports";
 import { AppDataSource } from "../database/data-source";
 import { v4 as uuidv4 } from 'uuid';
 import { In } from "typeorm";
+import { turnToWhereClause } from "./utils";
 
 export class TypeOrmUserRepository implements UserRepositoryPort {
     private userRepository = AppDataSource.getRepository(User);
 
-    async findAll(): Promise<User[]> {
-        return await this.userRepository.find();
+    async findAll(queryParams: Partial<User>): Promise<User[]> {
+        return await this.userRepository.find(turnToWhereClause(queryParams));
     }
 
-    async findById(id: string): Promise<User | undefined> {
+    async findOne(queryParams: Partial<User>): Promise<User | undefined> {
         const user = await this.userRepository.findOne({
-            where: { id }
-        });
-        return user || undefined;
-    }
-
-    async findByLiffUserId(liffUserId: string): Promise<User | undefined> {
-        const user = await this.userRepository.findOne({
-            where: { liffUserId }
+            where: turnToWhereClause(queryParams)
         });
         return user || undefined;
     }
@@ -40,7 +34,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
         return await this.userRepository.save(newUser);
     }
 
-    async updateUser(id: string, userData: Partial<User>): Promise<User | undefined> {
+    async updateUser(id: string, userData: Omit<Partial<User>, 'id'>): Promise<User | undefined> {
         const userToUpdate = await this.userRepository.findOne({
             where: { id }
         });
@@ -61,12 +55,5 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
     async deleteUser(id: string): Promise<boolean> {
         const result = await this.userRepository.delete(id);
         return result.affected ? result.affected > 0 : false;
-    }
-
-    async loginUser(liffUserId: string): Promise<User | undefined> {
-        const user = await this.userRepository.findOne({
-            where: { liffUserId }
-        });
-        return user || undefined;
     }
 }

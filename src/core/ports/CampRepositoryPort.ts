@@ -3,11 +3,11 @@ import { Camp } from "../entity";
 export interface CampRepositoryPort {
     findAll(queryParams?: Partial<Camp>): Promise<Camp[]>;
 
-    findById(id: string): Promise<Camp|undefined>;
+    findOne(queryParams: Partial<Camp>): Promise<Camp|undefined>;
 
     createCamp(campData: Omit<Camp, 'id'>): Promise<Camp>;
 
-    updateCamp(id: string, campData: Partial<Camp>): Promise<Camp|undefined>;
+    updateCamp(id: string, campData: Omit<Partial<Camp>, 'id'>): Promise<Camp|undefined>;
 
     deleteCamp(id: string): Promise<boolean>;
 }

@@ -9,18 +9,21 @@ export class CampDayService {
     }
 
     async getCampDay(id: string): Promise<CampDay | undefined> {
-        return await this.campDayRepository.findById(id);
+        return await this.campDayRepository.findOne({ id });
     }
 
     async getCampDaysByCampId(campId: string): Promise<CampDay[]> {
         return await this.campDayRepository.findByCampId(campId);
     }
 
-    async createCampDay(campDay: Omit<CampDay, 'id'>): Promise<CampDay> {
+    async createCampDay(campDay: Omit<CampDay, "id">): Promise<CampDay> {
         return await this.campDayRepository.createCampDay(campDay);
     }
 
-    async updateCampDay(id: string, campDayData: Partial<CampDay>): Promise<CampDay | undefined> {
+    async updateCampDay(
+        id: string,
+        campDayData: Partial<CampDay>
+    ): Promise<CampDay | undefined> {
         return await this.campDayRepository.updateCampDay(id, campDayData);
     }
 
