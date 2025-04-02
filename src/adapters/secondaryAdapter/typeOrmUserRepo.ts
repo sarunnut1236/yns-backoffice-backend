@@ -1,61 +1,59 @@
-import { User } from "../../core/entity";
+import { User, UserRole } from "../../core/entity";
 import { UserRepositoryPort } from "../../core/ports";
 import { AppDataSource } from "../database/data-source";
+import { v4 as uuidv4 } from 'uuid';
+import { In } from "typeorm";
+import { turnToWhereClause } from "./utils";
 
-export class TypeOrmUserRepositoryPort implements UserRepositoryPort {
+export class TypeOrmUserRepository implements UserRepositoryPort {
     private userRepository = AppDataSource.getRepository(User);
 
-    async findAll(): Promise<User[]> {
-        return await this.userRepository.find({ relations: ["cars"] });
+    async findAll(queryParams: Partial<User>): Promise<User[]> {
+        return await this.userRepository.find(turnToWhereClause(queryParams));
     }
 
-    async findByEmail(email: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: { email },
-            relations: ["cars"],
+    async findOne(queryParams: Partial<User>): Promise<User | undefined> {
+        const user = await this.userRepository.findOne({
+            where: turnToWhereClause(queryParams)
         });
+        return user || undefined;
     }
 
-    async findById(id: string): Promise<User | null> {
-        return await this.userRepository.findOne({
-            where: { id },
-            relations: ["cars"],
+    async bulkFindByIds(ids: string[]): Promise<User[]> {
+        return await this.userRepository.findBy({ id: In(ids) });
+    }
+
+    async createUser(user: Partial<User>): Promise<User> {
+        const newUser = this.userRepository.create({
+            ...user,
+            id: uuidv4(),
+            role: UserRole.JOINER,
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
+        return await this.userRepository.save(newUser);
     }
 
-    async updateUser(id: string, user: User): Promise<User> {
+    async updateUser(id: string, userData: Omit<Partial<User>, 'id'>): Promise<User | undefined> {
         const userToUpdate = await this.userRepository.findOne({
-            where: { id },
+            where: { id }
         });
 
         if (!userToUpdate) {
-            throw new Error(
-                "TypeOrmUserRepositoryPort.updateUser(): User not found"
-            );
+            return undefined;
         }
 
-        userToUpdate.email = user.email;
-        userToUpdate.fullName = user.fullName;
+        const updatedUser = {
+            ...userToUpdate,
+            ...userData,
+            updatedAt: new Date()
+        };
 
-        return await this.userRepository.save(userToUpdate);
+        return await this.userRepository.save(updatedUser);
     }
 
     async deleteUser(id: string): Promise<boolean> {
-        const userToDelete = await this.userRepository.findOne({
-            where: { id },
-        });
-
-        if (!userToDelete) {
-            throw new Error(
-                "TypeOrmUserRepositoryPort.deleteUser(): User not found"
-            );
-        }
-
-        await this.userRepository.remove(userToDelete);
-        return true;
-    }
-
-    async createUser(user: User): Promise<User> {
-        return await this.userRepository.save(user);
+        const result = await this.userRepository.delete(id);
+        return result.affected ? result.affected > 0 : false;
     }
 }

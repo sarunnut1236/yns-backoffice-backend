@@ -1,15 +1,15 @@
 import { User } from "../entity";
 
 export interface UserRepositoryPort {
-    findAll(): Promise<User[]>;
+    findAll(queryParams?: Partial<User>): Promise<User[]>;
 
-    findByEmail(email: string): Promise<User|null>;
+    findOne(queryParams: Partial<User>): Promise<User|undefined>;
 
-    findById(id: string): Promise<User|null>;
+    bulkFindByIds(ids: string[]): Promise<User[]>;
 
-    createUser(user: User): Promise<User>;
+    createUser(user: Partial<User>): Promise<User>;
 
     deleteUser(id: string): Promise<boolean>;
 
-    updateUser(id: string, user: User): Promise<User>;
+    updateUser(id: string, userData: Omit<Partial<User>, 'id'>): Promise<User|undefined>;
 }

@@ -2,29 +2,71 @@ import { User } from "../entity";
 import { UserRepositoryPort } from "../ports";
 
 export class UserService {
-    constructor(private readonly userRepository: UserRepositoryPort) {}
+    constructor(private readonly userRepository: UserRepositoryPort) { }
 
-    async getUsers(): Promise<User[]> {
-        return await this.userRepository.findAll();
+    async getUsers(queryParams: Partial<User>): Promise<User[]> {
+        try {
+            return await this.userRepository.findAll(queryParams);
+        } catch (error) {
+            console.error(`UserService.getUsers: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 
-    async createUser(user: User): Promise<User> {
-        return await this.userRepository.createUser(user);
+    async createUser(user: Partial<User>): Promise<User> {
+        try {
+            return await this.userRepository.createUser(user);
+        } catch (error) {
+            console.error(`UserService.createUser: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 
-    async updateUser(id: string, user: User): Promise<User> {
-        return await this.userRepository.updateUser(id, user);
+    async updateUser(
+        id: string,
+        userData: Omit<Partial<User>, 'id'>
+    ): Promise<User | undefined> {
+        try {
+            return await this.userRepository.updateUser(id, userData);
+        } catch (error) {
+            console.error(`UserService.updateUser: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 
     async deleteUser(id: string): Promise<boolean> {
-        return await this.userRepository.deleteUser(id);
+        try {
+            return await this.userRepository.deleteUser(id);
+        } catch (error) {
+            console.error(`UserService.deleteUser: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 
-    async getUser(id: string): Promise<User | null> {
-        return await this.userRepository.findById(id);
+    async getUser(id: string): Promise<User | undefined> {
+        try {
+            return await this.userRepository.findOne({ id });
+        } catch (error) {
+            console.error(`UserService.getUser: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 
-    async getUserByEmail(email: string): Promise<User | null> {
-        return await this.userRepository.findByEmail(email);
+    async getUserByLiffUserId(liffUserId: string): Promise<User | undefined> {
+        try {
+            return await this.userRepository.findOne({ liffUserId });
+        } catch (error) {
+            console.error(`UserService.getUserByLiffUserId: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
+    }
+
+    async getUsersByIds(ids: string[]): Promise<User[]> {
+        try {
+            return await this.userRepository.bulkFindByIds(ids);
+        } catch (error) {
+            console.error(`UserService.getUsersByIds: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw error;
+        }
     }
 }
