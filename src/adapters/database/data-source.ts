@@ -3,12 +3,12 @@ import { DataSource } from "typeorm";
 
 configDotenv();
 
-const { DATABASE_URL, NODE_ENV } =
+const { DATABASE_URL, NODE_ENV, DATABASE_URL_PROD } =
     process.env;
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    url: DATABASE_URL,
+    url: NODE_ENV === "production" ? DATABASE_URL_PROD : DATABASE_URL,
     synchronize: NODE_ENV === "development" ? true : false,
     logging: NODE_ENV === "development" ? true : false,
     entities: ["./src/core/entity/index.ts"],
