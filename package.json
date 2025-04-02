@@ -38,6 +38,6 @@
     "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration": "npm run typeorm migration:run -- -d ./src/adapters/database/data-source.ts",
-    "start": "concurrently \"npm run migration\" \"ts-node src/index.ts\""
+    "start": "ts-node src/index.ts"
   }
 }
