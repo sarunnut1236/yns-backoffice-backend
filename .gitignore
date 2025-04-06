@@ -24,3 +24,13 @@ dist/
 logs/
 *.log
 *.swp
+
+main.tf
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.tfstate.lock.info
+*.tfvars
+
+build
